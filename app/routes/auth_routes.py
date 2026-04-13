@@ -48,7 +48,8 @@ def verify_otp_endpoint(request: VerifyOTPRequest, response: Response):
         value=token,
         httponly=True,
         max_age=86400,  # 24 hours
-        samesite="lax",
+        samesite="none",
+        secure=True,
         path="/"
     )
 
@@ -87,7 +88,8 @@ def register_endpoint(request: RegisterRequest, response: Response):
         value=token,
         httponly=True,
         max_age=86400,
-        samesite="lax",
+        samesite="none",
+        secure=True,
         path="/"
     )
     
@@ -121,7 +123,8 @@ def login_endpoint(request: LoginRequest, response: Response):
         value=token,
         httponly=True,
         max_age=86400,
-        samesite="lax",
+        samesite="none",
+        secure=True,
         path="/"
     )
     
@@ -167,7 +170,8 @@ def google_callback(code: str):
         value=token,
         httponly=True,
         max_age=86400,
-        samesite="lax",
+        samesite="none",
+        secure=True,
         path="/"
     )
     
