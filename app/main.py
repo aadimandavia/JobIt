@@ -9,6 +9,7 @@ from app.routes.auth_routes import router as auth_router
 from app.models.user import create_users_table
 from app.models.job import create_jobs_table
 from app.scheduler.fetch_jobs import run_scraper
+from app.config import settings
 
 app = FastAPI(title="Reddit Job Board API")
 
