@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Response, Depends
+from app.config import settings
 from app.schemas.user_schema import SendOTPRequest, VerifyOTPRequest, UserResponse, UpdateNameRequest, RegisterRequest, LoginRequest
 from app.utils.otp_handler import send_otp, verify_otp
 from app.utils.jwt_handler import create_access_token, get_current_user
