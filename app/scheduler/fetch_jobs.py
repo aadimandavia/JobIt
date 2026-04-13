@@ -18,7 +18,7 @@ def fetch_search_results(query: str, max_limit: int = 100):
     url = f"https://www.reddit.com/search.json?q={query}&sort=new&t=week&limit={max_limit}"
     
     try:
-        response = requests.get(url, headers=HEADERS)
+        response = requests.get(url, headers=HEADERS, timeout=10)
         if response.status_code == 200:
             data = response.json().get("data", {})
             children = data.get("children", [])
@@ -42,7 +42,7 @@ def fetch_subreddit_posts(subreddit_name: str, max_limit: int = 100):
     url = f"https://www.reddit.com/r/{subreddit_name}/new.json?limit={max_limit}"
     
     try:
-        response = requests.get(url, headers=HEADERS)
+        response = requests.get(url, headers=HEADERS, timeout=10)
         if response.status_code == 200:
             data = response.json().get("data", {})
             children = data.get("children", [])
