@@ -99,7 +99,7 @@ export default function LoginPage({ theme, toggleTheme }) {
       const data = await loginManual(email, password);
       if (data.success) {
         showStatus('Login successful!', 'success');
-        loginUser(data.user);
+        loginUser(data.user, data.access_token);
         setTimeout(() => navigate('/dashboard'), 600);
       } else {
         showStatus(data.message || 'Invalid credentials');
@@ -121,7 +121,7 @@ export default function LoginPage({ theme, toggleTheme }) {
       const data = await registerManual(email, password, name);
       if (data.success) {
         showStatus('Account created! Logging you in...', 'success');
-        loginUser(data.user);
+        loginUser(data.user, data.access_token);
         setTimeout(() => navigate('/dashboard'), 1000);
       } else {
         showStatus(data.message || 'Registration failed');
@@ -161,7 +161,7 @@ export default function LoginPage({ theme, toggleTheme }) {
       const data = await verifyOtp(phone, otp);
       if (data.success) {
         showStatus('Login successful!', 'success');
-        loginUser(data.user);
+        loginUser(data.user, data.access_token);
         setTimeout(() => navigate('/dashboard'), 600);
       } else {
         showStatus(data.message || 'Invalid OTP');

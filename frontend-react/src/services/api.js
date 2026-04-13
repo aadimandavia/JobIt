@@ -1,12 +1,22 @@
 // ===== API Service Layer =====
 // All backend calls go through here
 
-const API_BASE = import.meta.env.VITE_API_URL || '';  // Vite environment variable
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
+// Helper to get headers with Bearer token
+function getHeaders(extraHeaders = {}) {
+  const token = localStorage.getItem('access_token');
+  const headers = { ...extraHeaders };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
 
 export async function sendOtp(phone) {
   const res = await fetch(`${API_BASE}/auth/send-otp`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getHeaders({ 'Content-Type': 'application/json' }),
     credentials: 'include',
     body: JSON.stringify({ phone }),
   });
@@ -16,7 +26,7 @@ export async function sendOtp(phone) {
 export async function verifyOtp(phone, otp) {
   const res = await fetch(`${API_BASE}/auth/verify-otp`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getHeaders({ 'Content-Type': 'application/json' }),
     credentials: 'include',
     body: JSON.stringify({ phone, otp }),
   });
@@ -26,7 +36,7 @@ export async function verifyOtp(phone, otp) {
 export async function registerManual(email, password, name = '') {
   const res = await fetch(`${API_BASE}/auth/register`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getHeaders({ 'Content-Type': 'application/json' }),
     credentials: 'include',
     body: JSON.stringify({ email, password, name }),
   });
@@ -36,7 +46,7 @@ export async function registerManual(email, password, name = '') {
 export async function loginManual(email, password) {
   const res = await fetch(`${API_BASE}/auth/login`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: getHeaders({ 'Content-Type': 'application/json' }),
     credentials: 'include',
     body: JSON.stringify({ email, password }),
   });
@@ -45,6 +55,7 @@ export async function loginManual(email, password) {
 
 export async function getMe() {
   const res = await fetch(`${API_BASE}/auth/me`, {
+    headers: getHeaders(),
     credentials: 'include',
   });
   if (!res.ok) throw new Error('Not authenticated');
@@ -52,8 +63,10 @@ export async function getMe() {
 }
 
 export async function logout() {
+  localStorage.removeItem('access_token');
   await fetch(`${API_BASE}/auth/logout`, {
     method: 'POST',
+    headers: getHeaders(),
     credentials: 'include',
   });
 }
@@ -61,6 +74,9 @@ export async function logout() {
 export async function fetchJobs(limit = 20, keyword = '') {
   let url = `${API_BASE}/jobs?limit=${limit}`;
   if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`;
-  const res = await fetch(url, { credentials: 'include' });
+  const res = await fetch(url, { 
+    headers: getHeaders(),
+    credentials: 'include' 
+  });
   return res.json();
 }

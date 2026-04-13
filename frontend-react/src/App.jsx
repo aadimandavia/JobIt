@@ -18,6 +18,23 @@ function PublicRoute({ children }) {
   return children;
 }
 
+function TokenGrabber() {
+  const { checkAuth } = useAuth();
+  
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (token) {
+      localStorage.setItem('access_token', token);
+      // Clean URL to remove token from history
+      window.history.replaceState({}, document.title, window.location.pathname);
+      checkAuth();
+    }
+  }, [checkAuth]);
+  
+  return null;
+}
+
 function App() {
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
@@ -32,6 +49,7 @@ function App() {
 
   return (
     <AuthProvider>
+      <TokenGrabber />
       <BrowserRouter>
         <div className="bg-mesh"></div>
         <div className="content">

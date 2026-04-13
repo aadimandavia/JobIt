@@ -25,11 +25,15 @@ export function AuthProvider({ children }) {
   }
 
   async function handleLogout() {
+    localStorage.removeItem('access_token');
     await apiLogout();
     setUser(null);
   }
 
-  function loginUser(userData) {
+  function loginUser(userData, token) {
+    if (token) {
+      localStorage.setItem('access_token', token);
+    }
     setUser(userData);
   }
 

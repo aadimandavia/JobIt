@@ -21,8 +21,17 @@ def decode_access_token(token: str) -> dict:
         raise HTTPException(status_code=401, detail="Invalid token")
 
 def get_current_user(request: Request) -> dict:
-    """Extract current user from JWT cookie. FastAPI dependency."""
-    token = request.cookies.get("access_token")
+    """Extract current user from JWT (Bearer or Cookie). FastAPI dependency."""
+    auth_header = request.headers.get("Authorization")
+    token = None
+    
+    if auth_header and auth_header.startswith("Bearer "):
+        token = auth_header.split(" ")[1]
+        
+    if not token:
+        token = request.cookies.get("access_token")
+        
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
+        
     return decode_access_token(token)

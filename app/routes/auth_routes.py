@@ -56,6 +56,7 @@ def verify_otp_endpoint(request: VerifyOTPRequest, response: Response):
     return {
         "success": True,
         "message": "Logged in successfully",
+        "access_token": token,
         "user": {
             "id": user["id"],
             "phone": user.get("phone"),
@@ -96,6 +97,7 @@ def register_endpoint(request: RegisterRequest, response: Response):
     return {
         "success": True,
         "message": "Account created successfully",
+        "access_token": token,
         "user": user
     }
 
@@ -131,6 +133,7 @@ def login_endpoint(request: LoginRequest, response: Response):
     return {
         "success": True,
         "message": "Logged in successfully",
+        "access_token": token,
         "user": {"id": user["id"], "email": user["email"], "name": user["name"]}
     }
 
@@ -163,8 +166,8 @@ def google_callback(code: str):
     # 4. Issue JWT
     token = create_access_token({"email": user["email"], "user_id": user["id"]})
     
-    # 5. Redirect to dashboard (frontend) and set cookie
-    response = RedirectResponse(url=f"{settings.FRONTEND_URL}/dashboard")
+    # 5. Redirect to dashboard (frontend) with token provided
+    response = RedirectResponse(url=f"{settings.FRONTEND_URL}/dashboard?token={token}")
     response.set_cookie(
         key="access_token",
         value=token,
