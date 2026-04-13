@@ -97,13 +97,18 @@ def run_scraper():
     total_processed = 0
     total_inserted = 0
     seen_urls = set()
+    print(f"[HUNTER] Aggregating posts... Total to scan: {len(all_posts)}")
     
-    for post in all_posts:
+    for i, post in enumerate(all_posts):
         if post["url"] in seen_urls:
             continue
         seen_urls.add(post["url"])
         
         total_processed += 1
+        
+        # Log progress every 20 items
+        if total_processed % 20 == 0:
+            print(f"[HUNTER] Progress: Analyzed {total_processed} items...")
         
         # Accuracy check: Title must pass heuristic filters AND the ML Intent model (Strict Bot Filter)
         if is_job_post(post["title"], post["description"]) and \
@@ -112,7 +117,9 @@ def run_scraper():
             if success:
                 total_inserted += 1
                 
-    print(f"[SUCCESS] Scraping finished! Scanned {total_processed} items. Inserted {total_inserted} new jobs.")
+    print(f"\n[SUCCESS] Scraping finished!")
+    print(f"--- Total Items Analyzed: {total_processed}")
+    print(f"--- New Jobs Saved:       {total_inserted}")
 
 if __name__ == "__main__":
     run_scraper()
