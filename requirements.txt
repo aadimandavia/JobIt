@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+psycopg2-binary
+python-dotenv
+pydantic
+requests
+PyJWT
+twilio
+python-multipart
+scikit-learn
+pandas
+passlib
+bcrypt
+requests-oauthlib
+gunicorn
+uvicorn[standard]
