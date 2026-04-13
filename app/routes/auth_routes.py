@@ -160,7 +160,7 @@ def google_callback(code: str):
     token = create_access_token({"email": user["email"], "user_id": user["id"]})
     
     # 5. Redirect to dashboard (frontend) and set cookie
-    response = RedirectResponse(url="http://localhost:5173/dashboard")
+    response = RedirectResponse(url=f"{settings.FRONTEND_URL}/dashboard")
     response.set_cookie(
         key="access_token",
         value=token,
