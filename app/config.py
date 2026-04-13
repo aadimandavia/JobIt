@@ -10,6 +10,7 @@ class Settings:
     DATABASE_URL = os.getenv("DATABASE_URL")
     SUBREDDITS = os.getenv("SUBREDDITS", "forhire+jobs+internships+jobbit+RemoteJobs+hiring+freelance_forhire+DevOpsJobs+sysadminjobs+gameDevJobs")
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+    FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
     # JWT
     JWT_SECRET = os.getenv("JWT_SECRET", "reddit-job-board-super-secret-key-change-me")
