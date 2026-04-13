@@ -99,42 +99,36 @@ def register_endpoint(request: RegisterRequest, response: Response):
 @router.post("/login")
 def login_endpoint(request: LoginRequest, response: Response):
     """Log in manually with email and password."""
-    params = get_user_by_email(request.email)
-    if not params:
-        # We check the database again to get password_hash which might not be in the summary dict
-        from app.database import get_db
-        conn = get_db()
-        cur = conn.cursor()
-        cur.execute("SELECT id, email, password_hash, name FROM users WHERE email = %s", (request.email,))
-        user = cur.fetchone()
-        cur.close()
-        conn.close()
-        
-        if not user:
-            return {"success": False, "message": "Invalid email or password"}
-        
-        # user is a tuple here: (id, email, password_hash, name)
-        if not verify_password(request.password, user[2]):
-            return {"success": False, "message": "Invalid email or password"}
-        
-        # Issue JWT
-        token = create_access_token({"email": user[1], "user_id": user[0]})
-        
-        response.set_cookie(
-            key="access_token",
-            value=token,
-            httponly=True,
-            max_age=86400,
-            samesite="lax",
-            path="/"
-        )
-        
-        return {
-            "success": True,
-            "message": "Logged in successfully",
-            "user": {"id": user[0], "email": user[1], "name": user[3]}
-        }
-    return {"success": False, "message": "Invalid email or password"}
+    user = get_user_by_email(request.email)
+    
+    if not user:
+        return {"success": False, "message": "Invalid email or password"}
+    
+    # Check if this is actually a manual user (and has a password hash)
+    if not user.get("password_hash"):
+        return {"success": False, "message": "Please use Google to log in for this account"}
+    
+    # Verify password
+    if not verify_password(request.password, user["password_hash"]):
+        return {"success": False, "message": "Invalid email or password"}
+    
+    # Issue JWT
+    token = create_access_token({"email": user["email"], "user_id": user["id"]})
+    
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        max_age=86400,
+        samesite="lax",
+        path="/"
+    )
+    
+    return {
+        "success": True,
+        "message": "Logged in successfully",
+        "user": {"id": user["id"], "email": user["email"], "name": user["name"]}
+    }
 
 @router.get("/google/login")
 def google_login():

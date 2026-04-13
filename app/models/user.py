@@ -116,7 +116,7 @@ def get_user_by_email(email: str):
     conn = get_db()
     cur = conn.cursor()
     try:
-        cur.execute("SELECT id, email, phone, name, provider, created_at, last_login FROM users WHERE email = %s", (email,))
+        cur.execute("SELECT id, email, phone, name, provider, password_hash, created_at, last_login FROM users WHERE email = %s", (email,))
         row = cur.fetchone()
         if row:
             return {
@@ -125,8 +125,9 @@ def get_user_by_email(email: str):
                 "phone": row[2],
                 "name": row[3],
                 "provider": row[4],
-                "created_at": row[5],
-                "last_login": row[6]
+                "password_hash": row[5],
+                "created_at": row[6],
+                "last_login": row[7]
             }
         return None
     finally:
