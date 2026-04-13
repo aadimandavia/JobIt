@@ -175,7 +175,8 @@ export default function LoginPage({ theme, toggleTheme }) {
   }
 
   const handleGoogleLogin = () => {
-    window.location.href = '/auth/google/login';
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    window.location.href = `${apiBase}/auth/google/login`;
   };
 
   const ThemeIcon = theme === 'light' ? '🌙' : '☀️';
