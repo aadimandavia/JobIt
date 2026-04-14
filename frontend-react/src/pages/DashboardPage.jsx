@@ -253,6 +253,7 @@ export default function DashboardPage({ theme, toggleTheme }) {
                 <span className="link-icon">Email</span>
               </a>
             </div>
+            <h5>This is just a beta version it can make mistakes</h5>
           </div>
         </div>
       </footer>
